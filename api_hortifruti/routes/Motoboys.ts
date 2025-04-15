@@ -63,10 +63,10 @@ const motoboySchema = z.object({
 
 router.get("/", async (req, res) => {
   try {
-    const feirantes = await prisma.feirante.findMany({
+    const motoboy = await prisma.motoboy.findMany({
     
     })
-    res.status(200).json(feirantes)
+    res.status(200).json(motoboy)
   } catch (error) {
     res.status(500).json({ erro: error })
   }
@@ -74,21 +74,21 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
 
-  const valida = feiranteSchema.safeParse(req.body)
+  const valida = motoboySchema.safeParse(req.body)
   if (!valida.success) {
     res.status(400).json({ erro: valida.error })
     return
   }
 
-  const { nome, email, senha, telefone, localizacao } = valida.data
+  const { nome, email, senha, telefone, veiculo, modelo_Veiculo, placa_Veiculo } = valida.data
 
   try {
-    const feirante = await prisma.feirante.create({
+    const motoboy = await prisma.motoboy.create({
       data: {
-        nome, email, senha, telefone, localizacao
+        nome, email, senha, telefone, veiculo, modelo_Veiculo, placa_Veiculo
       }
     })
-    res.status(201).json(feirante)
+    res.status(201).json(motoboy)
   } catch (error) {
     res.status(400).json({ error })
   }
@@ -98,10 +98,10 @@ router.delete("/:id", async (req, res) => {
   const { id } = req.params
 
   try {
-    const feirante = await prisma.feirante.delete({
+    const motoboy = await prisma.motoboy.delete({
       where: { id: Number(id) }
     })
-    res.status(200).json(feirante)
+    res.status(200).json(motoboy)
   } catch (error) {
     res.status(400).json({ erro: error })
   }
@@ -110,64 +110,80 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params
 
-  const valida = feiranteSchema.safeParse(req.body)
+  const valida = motoboySchema.safeParse(req.body)
   if (!valida.success) {
     res.status(400).json({ erro: valida.error })
     return
   }
 
-  const { nome, email, senha, telefone, localizacao } = valida.data
+  const { nome, email, senha, telefone, veiculo, modelo_Veiculo, placa_Veiculo } = valida.data
 
   try {
-    const feirante = await prisma.feirante.update({
+    const motoboy = await prisma.motoboy.update({
       where: { id: Number(id) },
       data: {
-        nome, email, senha, telefone, localizacao
+        nome, email, senha, telefone, veiculo, modelo_Veiculo, placa_Veiculo
       }
     })
-    res.status(200).json(feirante)
+    res.status(200).json(motoboy)
   } catch (error) {
     res.status(400).json({ error })
   }
 })
 
-router.get("/pesquisa/:termo", async (req, res) => {
-  const { termo } = req.params
+// router.get("/pesquisa/:termo", async (req, res) => {
+//   const { termo } = req.params;
+//   const motoboy_id = req.query.motoboy_id
+  
+//   if (!motoboy_id) {
+//     return res.status(400).json({ erro: "ID do motoboy é obrigatório" });
+//   }
+//   try {
+//     const pedidos = await prisma.pedido.findMany({
+//       where: {
+//         motoboy_id: Number(motoboy_id),
+//         OR: [
+//           {
+//             data_pedido: {
+//               contains: termo,
+//               mode: "insensitive"
+//             }
+//           },
+//           {
+//             status: {
+//               contains: termo,
+//               mode: "insensitive"
+//             }
+//           },
+//           {
+//             tipo_entrega: {
+//               contains: termo,
+//               mode: "insensitive"
+//             }
+//           }
+//         ]
+//       },
+//       include: {
+//         consumidor: true,
+//         pedidosMercadorias: true
+//       }
+//   });
+  
+//   res.status(200).json(pedidos);
+// } catch (error) {
+//   res.status(500).json({ erro: "Erro ao buscar pedidos", detalhes: error.message });
+// }
+// });
 
-  try {
-    const feirantes = await prisma.feirante.findMany({
-      where: {
-        OR: [
-          {
-            nome: {
-              contains: termo,
-              mode: "insensitive"
-            }
-          },
-          {
-            localizacao: {
-              contains: termo,
-              mode: "insensitive"
-            }
-          }
-        ]
-      }
-    })
-    res.status(200).json(feirantes)
-  } catch (error) {
-    res.status(500).json({ erro: error })
-  }
-})
-
-// Rota de Consulta de feirante pelo Id, retorna um OBJETO, não um ARRAY
+// Rota de Consulta de motoboy pelo Id, retorna um OBJETO, não um ARRAY
 router.get("/:id", async (req, res) => {
   const { id } = req.params
 
   try {
-    const feirante = await prisma.feirante.findUnique({
+    const motoboy = await prisma.motoboy.findUnique({
       where: { id: Number(id)},
     })
-    res.status(200).json(feirante)
+    res.status(200).json(motoboy)
   } catch (error) {
     res.status(400).json(error)
   }

@@ -6,6 +6,7 @@ import routesFeirantes from "./routes/feirantes"
 import routesUsuarios from "./routes/usuarios"
 import routesConsumidores from "./routes/consumidores"
 import routesMotoboys from "./routes/Motoboys"
+import routesLogin from "./routes/login"
 
 
 const app = express()
@@ -20,6 +21,7 @@ app.use("/usuarios", routesUsuarios)
 app.use("/fotos", routesFotos)
 app.use("/consumidores", routesConsumidores)
 app.use("/motoboys", routesMotoboys)
+app.use("/login", routesLogin)
 
 app.get('/', (req, res) => {
   res.send('API: Venda de Hortifrutis')

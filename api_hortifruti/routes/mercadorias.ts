@@ -41,6 +41,7 @@ const mercadoriaSchema = z.object({
   foto: z.string(),
   destaque: z.boolean().optional(),
   feirante_id: z.number(),
+  usuario_id: z.number(),
 })
 
 router.get("/", async (req, res) => {
@@ -66,12 +67,12 @@ router.post("/", async (req, res) => {
   }
 
   const { nome, preco, quantidade, categoria = 'FRUTAS', foto,
-    destaque = true,  feirante_id } = valida.data
+    destaque = true,  feirante_id, usuario_id } = valida.data
 
   try {
     const mercadoria = await prisma.mercadoria.create({
       data: {
-        nome, preco, quantidade, categoria, foto, destaque, feirante_id
+        nome, preco, quantidade, categoria, foto, destaque, feirante_id, usuario_id
       }
     })
     res.status(201).json(mercadoria)

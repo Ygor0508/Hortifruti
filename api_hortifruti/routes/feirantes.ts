@@ -53,6 +53,7 @@ const feiranteSchema = z.object({
   localizacao: z.string().min(2, {
       message: "Localização deve possuir, no mínimo, 2 caracteres"
     }),
+  usuario_id: z.number(),
   })
 
 router.get("/", async (req, res) => {
@@ -74,12 +75,12 @@ router.post("/", async (req, res) => {
     return
   }
 
-  const { nome, email, senha, telefone, localizacao } = valida.data
+  const { nome, email, senha, telefone, localizacao, usuario_id } = valida.data
 
   try {
     const feirante = await prisma.feirante.create({
       data: {
-        nome, email, senha, telefone, localizacao
+        nome, email, senha, telefone, localizacao, usuario_id
       }
     })
     res.status(201).json(feirante)
