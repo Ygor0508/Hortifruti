@@ -129,72 +129,37 @@ router.get("/pesquisa/:termo", async (req, res) => {
   const { termo } = req.params
 
   try {
-    const pedidos = await prisma.pedido.findMany({
+    const consumidores = await prisma.consumidor.findMany({
       where: {
         OR: [
           {
-            consumidor: {
               nome: {
                 contains: termo,
                 mode: "insensitive"
               }
-            }
           },
           {
-            status: {
+            endereco: {
               contains: termo,
               mode: "insensitive"
             }
           },
           {
-            tipo_entrega: {
+            telefone: {
               contains: termo,
               mode: "insensitive"
             }
           }
         ]
-      },
-      include: {
-        consumidor: true,
-        pedidosMercadorias: {
-          include: {
-            mercadoria: true
-          }
-        },
-        motoboy: true
       }
     })
 
-    res.status(200).json(pedidos)
+    res.status(200).json(consumidores)
   } catch (error) {
     console.error(error)
-    res.status(500).json({ erro: "Erro ao buscar pedidos." })
+    res.status(500).json({ erro: error })
   }
 })
-//   try {
-//     const consumidor = await prisma.consumidor.findMany({
-//       where: {
-//         OR: [
-//           {
-//             nome: {
-//               contains: termo,
-//               mode: "insensitive"
-//             }
-//           },
-//           {
-//             localizacao: {
-//               contains: termo,
-//               mode: "insensitive"
-//             }
-//           }
-//         ]
-//       }
-//     })
-//     res.status(200).json(feirantes)
-//   } catch (error) {
-//     res.status(500).json({ erro: error })
-//   }
-// })
 
 // Rota de Consulta de consumidor pelo Id, retorna um OBJETO, não um ARRAY
 router.get("/:id", async (req, res) => {

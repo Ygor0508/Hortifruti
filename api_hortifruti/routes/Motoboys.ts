@@ -131,49 +131,53 @@ router.put("/:id", async (req, res) => {
   }
 })
 
-// router.get("/pesquisa/:termo", async (req, res) => {
-//   const { termo } = req.params;
-//   const motoboy_id = req.query.motoboy_id
-  
-//   if (!motoboy_id) {
-//     return res.status(400).json({ erro: "ID do motoboy é obrigatório" });
-//   }
-//   try {
-//     const pedidos = await prisma.pedido.findMany({
-//       where: {
-//         motoboy_id: Number(motoboy_id),
-//         OR: [
-//           {
-//             data_pedido: {
-//               contains: termo,
-//               mode: "insensitive"
-//             }
-//           },
-//           {
-//             status: {
-//               contains: termo,
-//               mode: "insensitive"
-//             }
-//           },
-//           {
-//             tipo_entrega: {
-//               contains: termo,
-//               mode: "insensitive"
-//             }
-//           }
-//         ]
-//       },
-//       include: {
-//         consumidor: true,
-//         pedidosMercadorias: true
-//       }
-//   });
-  
-//   res.status(200).json(pedidos);
-// } catch (error) {
-//   res.status(500).json({ erro: "Erro ao buscar pedidos", detalhes: error.message });
-// }
-// });
+router.get("/pesquisa/:termo", async (req, res) => {
+  const { termo } = req.params
+
+  try {
+    const motoboys = await prisma.motoboy.findMany({
+      where: {
+        OR: [
+          {
+            nome: {
+              contains: termo,
+              mode: "insensitive"
+            }
+          },
+          {
+            telefone: {
+              contains: termo,
+              mode: "insensitive"
+            }
+          },
+          {
+            veiculo: {
+              contains: termo,
+              mode: "insensitive"
+            }
+          },
+          {
+            modelo_Veiculo: {
+              contains: termo,
+              mode: "insensitive"
+            }
+          },
+          {
+            placa_Veiculo: {
+              contains: termo,
+              mode: "insensitive"
+            }
+          },
+        ]
+      }
+    })
+
+    res.status(200).json(motoboys)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ erro: error })
+  }
+})
 
 // Rota de Consulta de motoboy pelo Id, retorna um OBJETO, não um ARRAY
 router.get("/:id", async (req, res) => {
