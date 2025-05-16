@@ -11,19 +11,28 @@ datasource db {
 }
 
 model Feirante {
-  id          Int          @id @default(autoincrement())
-  nome        String       @db.VarChar(60)
-  email       String       @db.VarChar(60)
-  senha       String       @db.VarChar(60)
-  telefone    String       @db.VarChar(60)
-  localizacao String       @db.VarChar(60)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt()
-  mercadorias Mercadoria[]
+  id                Int          @id @default(autoincrement())
+  nome              String       @db.VarChar(60)
+  email             String       @db.VarChar(60)
+  senha             String       @db.VarChar(60)
+  telefone          String       @db.VarChar(60)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt()
+  mercadorias       Mercadoria[]
   fotos_mercadoria  FotoMercadoria[]
-  usuario       Usuario      @relation(fields: [usuario_id], references: [id])
-  usuario_id    Int
+  usuario           Usuario      @relation(fields: [usuario_id], references: [id])
+  usuario_id        Int
+  localizacao       Localizacao[]
   @@map("feirantes")
+}
+
+model Localizacao {
+  id          Int      @id @default(autoincrement())
+  latitude    Float
+  longitude   Float
+  feirante    Feirante @relation(fields: [feirante_id], references: [id])
+  feirante_id Int
+  @@map("localizacao")
 }
 
 model Mercadoria {
@@ -39,9 +48,9 @@ model Mercadoria {
   feirante_id         Int
   destaque            Boolean            @default(true)
   fotos               FotoMercadoria[]
-  pedidosMercadorias  PedidoMercadoria[]
   usuario       Usuario      @relation(fields: [usuario_id], references: [id])
   usuario_id    Int
+  pedidos             Pedido[]
   @@map("mercadorias")
 }
 
@@ -58,32 +67,18 @@ model FotoMercadoria {
 
 model Pedido {
   id             Int                @id @default(autoincrement())
-  data_pedido    String             @db.VarChar(60)
-  status         String             @db.VarChar(60)
-  tipo_entrega   String             @db.VarChar(60)
+  status         Status             @default(EM_PREPARACAO)
+  tipo_entrega   Tipo_entrega       @default(ENTREGA)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt()
   consumidor     Consumidor         @relation(fields: [consumidor_id], references: [id])
   consumidor_id  Int
+  mercadoria     Mercadoria @relation(fields: [mercadoria_id], references: [id])
+  mercadoria_id  Int
   motoboy        Motoboy?           @relation(fields: [motoboy_id], references: [id])
   motoboy_id     Int?
-  pedidosMercadorias PedidoMercadoria[]
   @@map("pedidos")
 }
-// TIRAR DATA DO PEDIDO, JÁ FAZ UMA DATA EM AUTOMÁTICO
-// FAZER ENUM DE STATUS
-// FAZER ENUM DO TIPO DE ENTREGA
-
-model PedidoMercadoria {
-  id            Int        @id @default(autoincrement())
-  pedido        Pedido     @relation(fields: [pedido_id], references: [id])
-  pedido_id     Int
-  mercadoria    Mercadoria @relation(fields: [mercadoria_id], references: [id])
-  mercadoria_id Int
-  quantidade    String     @db.VarChar(60)
-  @@map("pedido_mercadoria")
-}
-// COLOCAR TIPO DE ENTREGA E FAZER ENUM DELA CASO FOR PRECISO
 
 model Consumidor {
   id        Int      @id @default(autoincrement())
@@ -134,4 +129,21 @@ enum Categoria {
   LEGUMES
   VERDURAS
   TEMPEROS
+}
+
+enum Status {
+  EM_ANDAMENTO
+  FINALIZADO
+  CANCELADO
+  PENDENTE
+  ENTREGUE
+  EM_PREPARACAO
+  EM_ROTA
+  RETORNANDO
+}
+
+enum Tipo_entrega {
+  RETIRADA_NO_LOCAL
+  ENTREGA
+  ENTREGA_PROGRAMADA
 }
