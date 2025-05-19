@@ -1,60 +1,54 @@
-import { PrismaClient, Status, Tipo_entrega } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
 import { Router } from "express"
-import { z } from 'zod'
+import { z } from "zod"
 import nodemailer from "nodemailer"
 
 const prisma = new PrismaClient()
 const router = Router()
 
+// Validação de criação de pedido
 const pedidoSchema = z.object({
-  quantidade: z.number(),
-  status: z.nativeEnum(Status),
-  Tipo_entrega: z.nativeEnum(Tipo_entrega),
-  consumidor: z.string(),
-  mercadoria: z.string(),
-  
+  consumidor_id: z.number(),
+  mercadoria_id: z.number(),
 })
 
+// GET /pedido/ — listar todos os pedidos
 router.get("/", async (req, res) => {
   try {
     const pedidos = await prisma.pedido.findMany({
-      include: {
-        mercadoria: true,
-        consumidor: true,
-      },
-      orderBy: { id: 'desc'}
+      include: { consumidor: true, mercadoria: true },
+      orderBy: { id: 'desc' }
     })
     res.status(200).json(pedidos)
   } catch (error) {
-    res.status(400).json(error)
+    res.status(400).json({ erro: error })
   }
 })
 
-
-// Cadsstro de pedido de mercadoria
-
+// POST /pedido/ — criar novo pedido
 router.post("/", async (req, res) => {
-
   const valida = pedidoSchema.safeParse(req.body)
   if (!valida.success) {
     res.status(400).json({ erro: valida.error })
     return
-  }  
-  const { pedido, mercadoria, quantidade } = valida.data
-
+  }
   try {
     const pedido = await prisma.pedido.create({
-      data: { pedido, mercadoria, quantidade }
+      data: valida.data
     })
-    res.status(201).json(pedido_mercadoria)
+    res.status(201).json(pedido)
   } catch (error) {
-    res.status(400).json(error)
+    res.status(400).json({ erro: error })
   }
 })
 
-async function enviaEmail(nome: string, email: string,
-  descricao: string, resposta: string) {
-
+// Função de envio de e-mail para atualização de status do pedido
+async function enviaEmailPedido(
+  nome: string,
+  email: string,
+  mercadoria: string,
+  status: string
+) {
   const transporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 587,
@@ -63,85 +57,92 @@ async function enviaEmail(nome: string, email: string,
       user: "968f0dd8cc78d9",
       pass: "89ed8bfbf9b7f9"
     }
-  });
+  })
 
   const info = await transporter.sendMail({
-    from: 'edeciofernando@gmail.com', // sender address
-    to: email, // list of receivers
-    subject: "Re: Proposta Revenda Herbie", // Subject line
-    text: resposta, // plain text body
-    html: `<h3>Estimado Cliente: ${nome}</h3>
-           <h3>Proposta: ${descricao}</h3>
-           <h3>Resposta da Revenda: ${resposta}</h3>
-           <p>Muito obrigado pelo seu contato</p>
-           <p>Revenda Herbie</p>`
-  });
+    from: 'no-reply@seusistema.com',
+    to: email,
+    subject: `Atualização do seu pedido: ${mercadoria}`,
+    text: `Olá ${nome},\n\nSeu pedido da mercadoria "${mercadoria}" agora está com status: ${status}.`,
+    html: `
+      <h3>Olá, ${nome}</h3>
+      <p>Sua mercadoria: <strong>${mercadoria}</strong></p>
+      <p>Status do pedido: <strong>${status}</strong></p>
+      <p>Obrigado por comprar conosco!</p>
+    `
+  })
 
-  console.log("Message sent: %s", info.messageId);
+  console.log("E-mail enviado: %s", info.messageId)
 }
 
+// PATCH /pedido/:id — atualizar status e/ou motoboy, e enviar e-mail
 router.patch("/:id", async (req, res) => {
   const { id } = req.params
-  const { resposta } = req.body
+  const { status, motoboy_id } = req.body
 
-  if (!resposta) {
-    res.status(400).json({ "erro": "Informe a resposta desta proposta" })
+  if (!status) {
+    res.status(400).json({ erro: "Informe o novo status do pedido" })
     return
   }
 
   try {
-    const proposta = await prisma.proposta.update({
+    // Atualiza o pedido
+    const pedido = await prisma.pedido.update({
       where: { id: Number(id) },
-      data: { resposta }
-    })
-
-    const dados = await prisma.proposta.findUnique({
-      where: { id: Number(id) },
-      include: {
-        cliente: true
+      data: {
+        status,
+        motoboy_id: motoboy_id ?? undefined
       }
     })
 
-    enviaEmail(dados?.cliente.nome as string,
-      dados?.cliente.email as string,
-      dados?.descricao as string,
-      resposta)
+    // Busca dados para envio de e-mail
+    const dados = await prisma.pedido.findUnique({
+      where: { id: Number(id) },
+      include: {
+        consumidor: true,
+        mercadoria: true
+      }
+    })
 
-    res.status(200).json(proposta)
+    if (dados) {
+      await enviaEmailPedido(
+        dados.consumidor.nome as string,
+        dados.consumidor.email as string,
+        dados.mercadoria.nome as string,
+        status
+      )
+    }
+
+    res.status(200).json(pedido)
   } catch (error) {
-    res.status(400).json(error)
+    res.status(400).json({ erro: error })
   }
 })
 
-router.get("/:clienteId", async (req, res) => {
-  const { clienteId } = req.params
+// GET /pedido/:consumidorId — pedidos de um consumidor
+router.get("/:consumidorId", async (req, res) => {
+  const { consumidorId } = req.params
   try {
-    const propostas = await prisma.proposta.findMany({
-      where: { clienteId },
-      include: {
-        carro: {
-          include: {
-            marca: true
-          }
-        }
-      }
+    const pedidos = await prisma.pedido.findMany({
+      where: { consumidor_id: Number(consumidorId) },
+      include: { mercadoria: true }
     })
-    res.status(200).json(propostas)
+    res.status(200).json(pedidos)
   } catch (error) {
-    res.status(400).json(error)
+    res.status(400).json({ erro: error })
   }
 })
 
+// DELETE /pedido/:id — remover pedido
 router.delete("/:id", async (req, res) => {
   const { id } = req.params
-
   try {
-    const proposta = await prisma.proposta.delete({
+    const pedido = await prisma.pedido.delete({
       where: { id: Number(id) }
     })
-    res.status(200).json(proposta)
+    res.status(200).json(pedido)
   } catch (error) {
-    res.status(400).json(error)
+    res.status(400).json({ erro: error })
   }
 })
 

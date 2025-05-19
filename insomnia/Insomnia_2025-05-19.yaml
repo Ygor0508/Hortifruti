@@ -1,0 +1,613 @@
+type: collection.insomnia.rest/5.0
+name: mercadorias
+meta:
+  id: wrk_96629694f21c4107a83028f4945aad32
+  created: 1744592897694
+  modified: 1744592897694
+collection:
+  - name: mercadorias
+    meta:
+      id: fld_73c39b1866af49d689eb64b204979670
+      created: 1744592909389
+      modified: 1744681813968
+      sortKey: -1744596335502.5
+    children:
+      - url: localhost:3001/mercadorias
+        name: Inclusão
+        meta:
+          id: req_d54bf8f226c44f1ab374a266d2ae1b32
+          created: 1744592924389
+          modified: 1744933433426
+          isPrivate: false
+          sortKey: -1744592924389
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"nome": "Cenoura",
+            	"preco": 6.50,
+            	"quantidade": 15,
+            	"categoria": "LEGUMES",
+            	"foto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsoxysh1iWJBlhS5OKtLwqRVb6s7WO8N2Egg&s",
+            	"feirante_id": 6,
+            	"usuario_id": 4
+
+            	
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/mercadorias
+        name: Listagem
+        meta:
+          id: req_0c2d71de07d14e348aa2cd6c404673a1
+          created: 1744592929984
+          modified: 1744593928481
+          isPrivate: false
+          sortKey: -1744592929984
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/mercadorias/2
+        name: Exclusão
+        meta:
+          id: req_44039e865b28496c85f6d0331a9402a2
+          created: 1744593682106
+          modified: 1744593710315
+          isPrivate: false
+          sortKey: -1744593682106
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/mercadorias/pesquisa/frutas
+        name: Pesquisa
+        meta:
+          id: req_bb3d3c9957aa436c90c0ee22a6bcfdab
+          created: 1744593787517
+          modified: 1744593947073
+          isPrivate: false
+          sortKey: -1744593787517
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Fotos
+    meta:
+      id: fld_f9c08db8470e4a3183ee49b7e814563f
+      created: 1744593992329
+      modified: 1744593999074
+      sortKey: -1744593992329
+    children:
+      - url: localhost:3001/fotos
+        name: Listagem
+        meta:
+          id: req_5f3b107afb764487885cdbf9ddf474ef
+          created: 1744593994857
+          modified: 1744594072747
+          isPrivate: false
+          sortKey: -1744593994857
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/fotos
+        name: Inclusão
+        meta:
+          id: req_86c3cfaa49cc410d900674a69fa2c9fd
+          created: 1744594590919
+          modified: 1744934686046
+          isPrivate: false
+          sortKey: -1744594590919
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - id: pair_04bd9a41d0b54203a1edf717ee77f779
+              name: descricao
+              value: Sabor suave, Fresquinha e Rica em energia
+              disabled: false
+              type: text
+              multiline: false
+            - id: pair_46b649b9af7a4632a8730c0e82711d41
+              name: feirante_id
+              value: "6"
+              disabled: false
+              type: text
+              multiline: false
+            - id: pair_a50affedc2a94cd7ae25bb8657b6a03d
+              name: mercadoria_id
+              value: "5"
+              disabled: false
+              type: text
+              multiline: false
+            - id: pair_2b676f3ce25741d6ae9c2cd396d2aea9
+              name: imagem
+              disabled: false
+              type: file
+              fileName: C:\Users\Ygor\Desktop\cenoura.png
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Feirantes
+    meta:
+      id: fld_e79611ba470e415bbbaf14e146ce02e0
+      created: 1744598678676
+      modified: 1744598688411
+      sortKey: -1744598678676
+    children:
+      - url: localhost:3001/feirantes
+        name: Listagem
+        meta:
+          id: req_3deeecd7abd94de980b099e3eba40a42
+          created: 1744598683865
+          modified: 1744598715185
+          isPrivate: false
+          sortKey: -1744598683865
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/feirantes
+        name: Inclusão
+        meta:
+          id: req_760ebc5321d646a59bb284f66c04d8ce
+          created: 1744598852130
+          modified: 1744681919791
+          isPrivate: false
+          sortKey: -1744598852130
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "ygor",
+            	"email": "ygor@gmail.com",
+            	"senha": "Ygor@s1234",
+            	"telefone": "53991114321",
+            	"localizacao": "Porto",
+            	"usuario_id": 4
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/feirantes/5
+        name: Exclusão
+        meta:
+          id: req_6e5a9461dc0449c3a419dfd111cf7294
+          created: 1744599160233
+          modified: 1744599183826
+          isPrivate: false
+          sortKey: -1744599160233
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/feirantes/pesquisa/porto
+        name: Pesquisa
+        meta:
+          id: req_950efd5a6dcd4d3a81acce21ea43a0de
+          created: 1744599212450
+          modified: 1744684222315
+          isPrivate: false
+          sortKey: -1744599212450
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Usuario
+    meta:
+      id: fld_e2f869d784e1442296df80a6a85dcee9
+      created: 1744679843649
+      modified: 1744679843649
+      sortKey: -1744679843649
+    children:
+      - url: localhost:3001/usuarios
+        name: listagem
+        meta:
+          id: req_9eebc5fe97634d21aabe22c1432f606b
+          created: 1744679850038
+          modified: 1744679918837
+          isPrivate: false
+          sortKey: -1744679850038
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/usuarios
+        name: Inclusão
+        meta:
+          id: req_32ed3c9612984e63a250fb2894ca30b4
+          created: 1744679861952
+          modified: 1744681779878
+          isPrivate: false
+          sortKey: -1744679861952
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "ygor",
+            	"email": "ygor@hotmail.com",
+            	"senha": "Ygor@1234",
+            	"nivel": 3
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_601d97370cfa4190b659af23196429e4
+          - name: User-Agent
+            value: insomnia/11.0.2
+            id: pair_d389857cccc84d22b147ff3220e89389
+          - id: pair_b51660547bc142359ebb4c693c1045a7
+            name: Authorization
+            value: Bearer
+              eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTG9nYWRvSWQiOjEsInVzZXJMb2dhZG9Ob21lIjoiQWRtaW4iLCJ1c2VyTG9nYWRvTml2ZWwiOjMsImlhdCI6MTc0NDY4MTc2NSwiZXhwIjoxNzQ0Njg1MzY1fQ.fa-S9tWXNYxBEIcbQrkUPkrbbgFvEgkF3YHTcFzWwfw
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/login
+        name: Login
+        meta:
+          id: req_6b8b1a9424c5494badb983adbc44d3ff
+          created: 1744680379698
+          modified: 1744933360833
+          isPrivate: false
+          sortKey: -1744680379698
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "ygor@hotmail.com",
+            	"senha": "Ygor@1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Consumidores
+    meta:
+      id: fld_b8d3e8442f604501af5c2c8bbef81446
+      created: 1744683849154
+      modified: 1744683849154
+      sortKey: -1744683849154
+    children:
+      - url: localhost:3001/consumidores
+        name: Listagem
+        meta:
+          id: req_70c1988946a543f89054615284e9ea1d
+          created: 1744683863040
+          modified: 1744683897927
+          isPrivate: false
+          sortKey: -1744683863040
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/consumidores
+        name: Inclusão
+        meta:
+          id: req_20609d0ac94a4a448e493fe0040c99e1
+          created: 1744683865099
+          modified: 1744684681616
+          isPrivate: false
+          sortKey: -1744683865099
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "ygor",
+            	"email": "ygor@hortifruti.com",
+            	"senha": "Ygor@1234",
+            	"telefone": "53991196891",
+            	"endereco": "Tiradentes, 939"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/consumidores/3
+        name: Exclusão
+        meta:
+          id: req_0c76e7dfaeb14b06a0d40ee925dd300a
+          created: 1744683866797
+          modified: 1744684969021
+          isPrivate: false
+          sortKey: -1744683866797
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/consumidores/pesquisa/
+        name: Pesquisa
+        meta:
+          id: req_7ce4673dd4694182addf46b7781caddb
+          created: 1744683871369
+          modified: 1744684601207
+          isPrivate: false
+          sortKey: -1744683871369
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Motoboys
+    meta:
+      id: fld_7394562ca5a3469694eddddfa6f87836
+      created: 1744683858891
+      modified: 1744683858891
+      sortKey: -1744683858891
+    children:
+      - url: localhost:3001/motoboys
+        name: Listagem
+        meta:
+          id: req_9c6a63c09b47409e82b8fde3dec59f62
+          created: 1744684624244
+          modified: 1744684662865
+          isPrivate: false
+          sortKey: -1744684624244
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/motoboys
+        name: Inclusão
+        meta:
+          id: req_8c53c5e93fc34c37b85c1870b4862186
+          created: 1744684625978
+          modified: 1744684866982
+          isPrivate: false
+          sortKey: -1744684625978
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "ygor",
+            	"email": "ygor@hortifruti.com",
+            	"senha": "Ygor@1234",
+            	"telefone": "53991196891",
+            	"endereco": "Tiradentes, 939",
+            	"veiculo": "Moto",
+            	"modelo_Veiculo": "Cg Titan, 125",
+            	"placa_Veiculo": "ilw2544"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/motoboys/3
+        name: Exclusão
+        meta:
+          id: req_317460564fe344789a847a7ad0403908
+          created: 1744684627541
+          modified: 1744684952293
+          isPrivate: false
+          sortKey: -1744684627541
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/motoboys/pesquisa/titan
+        name: Pesquisa (nome, telefone, veiculo, modelo e placa)
+        meta:
+          id: req_f0a4076344224ec29d1111c391d0184e
+          created: 1744684629122
+          modified: 1744685295707
+          isPrivate: false
+          sortKey: -1744684629122
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:3001/motoboys/2
+        name: Pesquisa (id)
+        meta:
+          id: req_d1080d258f484a599139204250925a69
+          created: 1744685313806
+          modified: 1744933567044
+          isPrivate: false
+          sortKey: -1744685313806
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.0.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_f9b502ee82411274c3109b20747c2e5364f9b3dd
+    created: 1744592897701
+    modified: 1744592897701
+environments:
+  name: Base Environment
+  meta:
+    id: env_f9b502ee82411274c3109b20747c2e5364f9b3dd
+    created: 1744592897698
+    modified: 1744592897698
+    isPrivate: false
