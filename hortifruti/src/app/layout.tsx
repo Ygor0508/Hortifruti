@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 // import { Header } from "@/components/Header";
-import { Header } from "../app/componentes/Header";
+import { Header } from "../componentes/Header";
 import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
@@ -15,6 +15,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="pt-br">
       <body>

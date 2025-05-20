@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, Status, Tipo_entrega } from "@prisma/client"
 import { Router } from "express"
 import { z } from "zod"
 import nodemailer from "nodemailer"
@@ -10,6 +10,9 @@ const router = Router()
 const pedidoSchema = z.object({
   consumidor_id: z.number(),
   mercadoria_id: z.number(),
+  status: z.nativeEnum(Status),
+  tipo_entrega: z.nativeEnum(Tipo_entrega),
+  motoboy_id: z.number().optional(),
 })
 
 // GET /pedido/ — listar todos os pedidos

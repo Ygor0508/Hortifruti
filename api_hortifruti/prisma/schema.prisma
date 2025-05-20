@@ -51,8 +51,12 @@ model Mercadoria {
   usuario       Usuario      @relation(fields: [usuario_id], references: [id])
   usuario_id    Int
   pedidos             Pedido[]
+  carrinho            Carrinho[]
   @@map("mercadorias")
 }
+
+
+
 
 model FotoMercadoria {
   id           Int        @id @default(autoincrement())
@@ -81,15 +85,16 @@ model Pedido {
 }
 
 model Consumidor {
-  id        Int      @id @default(autoincrement())
-  nome      String   @db.VarChar(60)
-  email     String   @db.VarChar(60)
-  senha     String   @db.VarChar(60)
-  telefone  String   @db.VarChar(60)
-  endereco  String   @db.VarChar(60)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-  pedidos   Pedido[]
+  id                Int      @id @default(autoincrement())
+  nome              String   @db.VarChar(60)
+  email             String   @unique @db.VarChar(60)
+  senha             String   @db.VarChar(60)
+  telefone          String   @db.VarChar(60)
+  endereco          String   @db.VarChar(60)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt()
+  codigoRecuperacao String?  
+  pedidos           Pedido[]
   @@map("consumidores")
 }
 
@@ -109,10 +114,20 @@ model Motoboy {
   @@map("motoboys")
 }
 
-// falta criar a model veiculo
+
+model Carrinho {
+  id             Int         @id @default(autoincrement())
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt()
+  usuario       Usuario      @relation(fields: [usuario_id], references: [id])
+  usuario_id    Int
+  mercadoria     Mercadoria @relation(fields: [mercadoria_id], references: [id])
+  mercadoria_id  Int
+  @@map("carrinho")
+}
 
 model Usuario {
-  id Int              @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   nome                String   @db.VarChar(60)
   email               String   @db.VarChar(60)
   senha               String   @db.VarChar(60)
@@ -121,6 +136,7 @@ model Usuario {
   updatedAt           DateTime @updatedAt
   mercadorias         Mercadoria[]
   feirantes           Feirante[]
+  carrinho            Carrinho[]
   @@map("usuarios") 
 }
 

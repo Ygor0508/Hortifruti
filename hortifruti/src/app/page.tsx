@@ -1,10 +1,10 @@
 'use client'
 // import { CardMercadoria } from "@/components/CardMercadoria";
-import { CardMercadoria } from "../app/componentes/CardMercadorias";
+import { CardMercadoria } from "../componentes/CardMercadorias";
 // import { InputPesquisa } from "@/components/InputPesquisa";
-import { InputPesquisa } from "../app/componentes/InputPesquisa";
+import { InputPesquisa } from "../componentes/InputPesquisa";
 // import { MercadoriaItf } from "@/utils/types/MercadorisItf";
-import { MercadoriaItf } from "../app/utils/types/MercadoriaItf";
+import { MercadoriaItf } from "../utils/types/MercadoriaItf";
 import { useEffect, useState } from "react";
 
 export default function Home() {

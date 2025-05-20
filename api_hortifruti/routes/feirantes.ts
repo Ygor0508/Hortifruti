@@ -50,10 +50,11 @@ const feiranteSchema = z.object({
         message: "Telefone deve conter apenas números e ter entre 10 e 11 dígitos"
       }),
   
-  localizacao: z.string().min(2, {
-      message: "Localização deve possuir, no mínimo, 2 caracteres"
-    }),
-  usuario_id: z.number(),
+    localizacao: z.object({
+        latitude: z.number({ invalid_type_error: "Latitude deve ser um número" }),
+        longitude: z.number({ invalid_type_error: "Longitude deve ser um número" })
+      }),
+    usuario_id: z.number(),
   })
 
 router.get("/", async (req, res) => {
@@ -80,7 +81,18 @@ router.post("/", async (req, res) => {
   try {
     const feirante = await prisma.feirante.create({
       data: {
-        nome, email, senha, telefone, localizacao, usuario_id
+        nome,
+        email,
+        senha,
+        telefone,
+        usuario_id,
+        
+        localizacao: {
+          create: [{
+            latitude: localizacao.latitude,
+            longitude: localizacao.longitude,
+          }]
+        }
       }
     })
     res.status(201).json(feirante)
@@ -102,29 +114,79 @@ router.delete("/:id", async (req, res) => {
   }
 })
 
+// router.put("/:id", async (req, res) => {
+//   const { id } = req.params
+
+//   const valida = feiranteSchema.safeParse(req.body)
+//   if (!valida.success) {
+//     res.status(400).json({ erro: valida.error })
+//     return
+//   }
+
+//   const { nome, email, senha, telefone, localizacao } = valida.data
+
+//   try {
+//     const feirante = await prisma.feirante.update({
+//       where: { id: Number(id) },
+//       data: {
+//         nome, email, senha, telefone, localizacao
+//       }
+//     })
+//     res.status(200).json(feirante)
+//   } catch (error) {
+//     res.status(400).json({ error })
+//   }
+// })
+
 router.put("/:id", async (req, res) => {
   const { id } = req.params
-
   const valida = feiranteSchema.safeParse(req.body)
   if (!valida.success) {
-    res.status(400).json({ erro: valida.error })
-    return
+    return res.status(400).json({ erro: valida.error })
   }
-
   const { nome, email, senha, telefone, localizacao } = valida.data
 
   try {
-    const feirante = await prisma.feirante.update({
+    // Busca feirante + localização atual para obter o ID
+    const feiranteAtual = await prisma.feirante.findUnique({
+      where: { id: Number(id) },
+      include: { localizacao: true }
+    })
+    if (!feiranteAtual) {
+      return res.status(404).json({ erro: "Feirante não encontrado" })
+    }
+    if (feiranteAtual.localizacao.length === 0) {
+      return res.status(400).json({ erro: "Nenhuma localização cadastrada" })
+    }
+
+    // Nested update: data fica DENTRO de update
+    const updatedFeirante = await prisma.feirante.update({
       where: { id: Number(id) },
       data: {
-        nome, email, senha, telefone, localizacao
-      }
+        nome,
+        email,
+        senha,
+        telefone,
+        localizacao: {
+          update: {
+            where: { id: feiranteAtual.localizacao[0].id },
+            data: {
+              latitude: localizacao.latitude,
+              longitude: localizacao.longitude,
+            },
+          },
+        },
+      },
+      include: { localizacao: true },
     })
-    res.status(200).json(feirante)
+
+      return res.status(200).json(updatedFeirante)
   } catch (error) {
-    res.status(400).json({ error })
+    return res.status(500).json({ erro: error })
   }
 })
+
+
 
 router.get("/pesquisa/:termo", async (req, res) => {
   const { termo } = req.params
@@ -139,12 +201,12 @@ router.get("/pesquisa/:termo", async (req, res) => {
               mode: "insensitive"
             }
           },
-          {
-            localizacao: {
-              contains: termo,
-              mode: "insensitive"
-            }
-          }
+        //   {
+        //     localizacao: {
+        //       contains: termo,
+        //       mode: "insensitive"
+        //     }
+        //   }
         ]
       }
     })

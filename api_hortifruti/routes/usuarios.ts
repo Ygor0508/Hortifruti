@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client"
 import { Router } from "express"
 import bcrypt from 'bcrypt'
 import { z } from 'zod'
-import { verificaToken } from '../middlewares/verificaToken'
-import { verificaNivel } from '../middlewares/verificaNivel'
+// import { verificaToken } from '../middlewares/verificaToken'
+// import { verificaNivel } from '../middlewares/verificaNivel'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -74,7 +74,8 @@ function validaSenha(senha: string) {
   return mensa
 }
 
-router.post("/", verificaToken, verificaNivel(3), async (req, res) => {
+// router.post("/", verificaToken, verificaNivel(3), async (req, res) => {
+router.post("/", async (req, res) => {
 
   const valida = usuarioSchema.safeParse(req.body)
   if (!valida.success) {
@@ -102,7 +103,8 @@ router.post("/", verificaToken, verificaNivel(3), async (req, res) => {
   }
 })
 
-router.patch("/alterar-senha/:id", verificaToken, async (req, res) => {
+// router.patch("/alterar-senha/:id", verificaToken, async (req, res) => {
+router.patch("/alterar-senha/:id", async (req, res) => {
   const { id } = req.params;
   const { senha, senhaNova } = req.body;
 

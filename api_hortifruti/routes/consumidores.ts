@@ -1,6 +1,11 @@
+import { Router, Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
-import { Router } from 'express'
 import { z } from 'zod'
+
+import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
 const prisma = new PrismaClient()
 // const prisma = new PrismaClient({
@@ -174,5 +179,108 @@ router.get("/:id", async (req, res) => {
     res.status(400).json(error)
   }
 })
+
+// 1) Solicitar código de recuperação
+router.post("/solicitar-recuperacao", async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+      if (!email)
+        return res.status(400).json({ error: "Email é obrigatório" });
+
+      const consumidor = await prisma.consumidor.findUnique({
+        where: { email },
+      });
+      if (!consumidor)
+        return res
+          .status(404)
+          .json({ error: "Consumidor não encontrado" });
+
+      // Gera um código numérico de 6 dígitos
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+      await prisma.consumidor.update({
+        where: { email },
+        data: { codigoRecuperacao: code },
+      });
+
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
+        secure: false,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+
+      await transporter.sendMail({
+        from: process.env.SMTP_FROM,
+        to: email,
+        subject: "Código de recuperação de senha",
+        text: `Use este código para recuperar sua senha: ${code}`,
+      });
+
+      return res.json({
+        message: "Código de recuperação enviado para seu email",
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Erro interno" });
+    }
+  }
+);
+
+// 2) Alterar senha usando código de recuperação
+router.post(
+  "/alterar-senha",
+  async (req: Request, res: Response) => {
+    try {
+      const {
+        email,
+        codigoRecuperacao,
+        novaSenha,
+        confirmarSenha,
+      } = req.body;
+      if (
+        !email ||
+        !codigoRecuperacao ||
+        !novaSenha ||
+        !confirmarSenha
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Todos os campos são obrigatórios" });
+      }
+      if (novaSenha !== confirmarSenha) {
+        return res
+          .status(400)
+          .json({ error: "As senhas não coincidem" });
+      }
+
+      const consumidor = await prisma.consumidor.findUnique({
+        where: { email },
+      });
+      if (
+        !consumidor ||
+        consumidor.codigoRecuperacao !== codigoRecuperacao
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Código de recuperação inválido" });
+      }
+
+      const hash = await bcrypt.hash(novaSenha, 10);
+      await prisma.consumidor.update({
+        where: { email },
+        data: { senha: hash, codigoRecuperacao: null },
+      });
+
+      return res.json({ message: "Senha alterada com sucesso" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Erro interno" });
+    }
+  }
+);
 
 export default router
