@@ -1,6 +1,5 @@
-import { ConsumidorItf } from "./ConsumidorItf"
+import { UsuarioItf } from "./UsuarioItf"
 import { MercadoriaItf } from "./MercadoriaItf"
-import { MotoboyItf } from "./MotoboyItf"
 
 export enum Status {
   EM_ANDAMENTO = "EM_ANDAMENTO",
@@ -13,22 +12,14 @@ export enum Status {
   RETORNANDO = "RETORNANDO",
 }
 
-export enum Tipo_entrega {
-  RETIRADA_NO_LOCAL = "RETIRADA_NO_LOCAL",
-  ENTREGA = "ENTREGA",
-  ENTREGA_PROGRAMADA = "ENTREGA_PROGRAMADA",
-}
 
 export interface PedidoItf {
   id: number
   status: Status
-  tipo_entrega: Tipo_entrega
   createdAt: string // DateTime no Prisma, aqui usa string
   updatedAt: string
-  consumidorId: number
-  consumidor: ConsumidorItf
-  mercadoriaId: number
   mercadoria: MercadoriaItf
-  motoboyId?: number | null
-  motoboy?: MotoboyItf | null
+  mercadoria_Id: number
+  usuario: UsuarioItf
+  usuario_id: string
 }

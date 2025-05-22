@@ -9,7 +9,9 @@ export function CardMercadoria({ data }: { data: MercadoriaItf }) {
       <div className="p-5">
         {/* 👇 usa a variável protegida */}
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {data.nome} {data.localizacao}
+          {data.nome} <br />
+          Quantidade:&nbsp;
+          {data.quantidade}
         </h5>
 
         <p className="mb-3 font-extrabold text-gray-700 dark:text-gray-400">

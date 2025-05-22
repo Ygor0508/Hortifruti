@@ -39,16 +39,17 @@ export default function Pedido() {
   const pedidoTable = pedido.map(pedido => (
     <tr key={pedido.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
       <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-        <p><b>{pedido.mercadoria.categoria} {pedido.mercadoria.nome}</b></p>
-        <p className='mt-3'>Quantidade: {pedido.mercadoria.quantidade} -
+        <p><b>{pedido.mercadoria.nome} <br/> 
+          {pedido.mercadoria.categoria}</b></p>
+        <p className='mt-3'>
           R$: {Number(pedido.mercadoria.preco).toLocaleString("pt-br", { minimumFractionDigits: 2 })}</p>
       </th>
       <td className="px-6 py-4">
         <img src={pedido.mercadoria.foto} className="fotoMercadoria" alt="Foto Mercadoria" />
       </td>
       <td className="px-6 py-4">
-        <p><b>{pedido.mercadoriaId}</b></p>
-        <p><i>Enviado em: {dataDMA(pedido.createdAt)}</i></p>
+        <p><b>{pedido.mercadoria_Id}</b></p>
+        <p><i>{pedido.mercadoria.quantidade}</i></p>
       </td>
       <td className="px-6 py-4">
         {pedido.status ?
@@ -71,16 +72,16 @@ export default function Pedido() {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
+              Nome
+            </th>
+            <th scope="col" className="px-6 py-3">
               Foto
             </th>
             <th scope="col" className="px-6 py-3">
-              Mercadoria
+              Quantidade
             </th>
             <th scope="col" className="px-6 py-3">
-              Tipo de produto
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Data
+              Categoria
             </th>
           </tr>
         </thead>

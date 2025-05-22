@@ -12,6 +12,6 @@ export interface MercadoriaItf {
     foto: string
     createdAt: Date
     updatedAt: Date
-    Feirante: FeiranteItf
+    feirante: FeiranteItf
     fotos: FotoItf[]
 }

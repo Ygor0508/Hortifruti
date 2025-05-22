@@ -20,11 +20,15 @@ export default function Detalhes() {
     buscaDados()
   }, [params.mercadoria_id])
 
-  async function adicionaCarrinho() {
+  async function adicionaPedido() {
     if (!cliente?.id) {
       toast.error("Você precisa estar logado para adicionar ao carrinho.")
       return
     }
+
+    console.log("🟢 ID do cliente logado:", cliente.id)
+    console.log("🟢 id produto:", params.mercadoria_id)
+    console.log("🟢 status:", "EM_PREPARACAO")
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/pedido`, {
       method: "POST",
@@ -32,11 +36,16 @@ export default function Detalhes() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        clienteId: cliente.id,
-        mercadoriaId: Number(params.mercadoria_id),
-        descricao: `Compra da mercadoria: ${mercadoria?.nome ?? ''}`
+        status: "EM_PREPARACAO",
+        mercadoria_id: Number(params.mercadoria_id),
+        usuario_id: cliente.id
+        // descricao: `Compra da mercadoria: ${mercadoria?.nome ?? ''}`
       })
     })
+
+    const textoErro = await response.text()
+console.log("Erro ao adicionar pedido:", textoErro)
+
 
     if (response.status === 201) {
       toast.success("Mercadoria adicionada ao carrinho!")
@@ -68,10 +77,10 @@ export default function Detalhes() {
             />
             <div className="flex flex-col justify-between p-4 leading-normal">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {mercadoria.nome} {mercadoria.categoria}
+                Nome: {mercadoria ? mercadoria.nome : "Carregando..."} {mercadoria.categoria}
               </h5>
               <h5 className="mb-2 text-xl tracking-tight text-gray-900 dark:text-white">
-                Localização: {mercadoria.localizacao}
+                Feirante: {mercadoria?.feirante?.nome ?? "Carregando..."}
               </h5>
               <h5 className="mb-2 text-xl tracking-tight text-gray-900 dark:text-white">
                 Preço R$: {Number(mercadoria.preco).toLocaleString("pt-br", { minimumFractionDigits: 2 })}
@@ -82,10 +91,10 @@ export default function Detalhes() {
 
               {/* Botão para adicionar ao carrinho */}
               <button
-                onClick={adicionaCarrinho}
+                onClick={adicionaPedido}
                 className="mt-4 px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
               >
-                Adicionar ao Carrinho
+                Adicionar pedido
               </button>
             </div>
           </>

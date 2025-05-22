@@ -9,6 +9,7 @@ const prisma = new PrismaClient()
 const router = Router()
 
 const usuarioSchema = z.object({
+  // id: z.string(),
   nome: z.string(),
   email: z.string(),
   senha: z.string(),
@@ -82,6 +83,7 @@ router.post("/", async (req, res) => {
     res.status(400).json({ erro: valida.error })
     return
   }
+  
 
   const erros = validaSenha(valida.data.senha)
   if (erros.length > 0) {
@@ -99,7 +101,7 @@ router.post("/", async (req, res) => {
     })
     res.status(201).json(usuario)
   } catch (error) {
-    res.status(400).json(error)
+    res.status(400).json({ mensagem: 'E-mail já cadastrado.' })
   }
 })
 
@@ -108,8 +110,8 @@ router.patch("/alterar-senha/:id", async (req, res) => {
   const { id } = req.params;
   const { senha, senhaNova } = req.body;
 
-  const userId = parseInt(id);
-  if (isNaN(userId)) {
+  const userId = id;
+  if (userId != "") {
     return res.status(400).json({ erro: "ID inválido" });
   }
 

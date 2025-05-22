@@ -1,16 +1,16 @@
-import { ClienteItf } from '@/utils/types/ClienteItf'
+import { UsuarioItf } from '@/utils/types/UsuarioItf'
 import { create } from 'zustand'
 
 type ClienteStore = {
-    cliente: ClienteItf
-    logaCliente: (clienteLogado: ClienteItf) => void
+    cliente: UsuarioItf
+    logaCliente: (clienteLogado: UsuarioItf) => void
     deslogaCliente: () => void
 }
 
 export const useClienteStore = create<ClienteStore>((set) => ({
-    cliente: {} as ClienteItf,
+    cliente: {} as UsuarioItf,
     logaCliente: (clienteLogado) => set({cliente: clienteLogado}),
-    deslogaCliente: () => set({cliente: {} as ClienteItf})
+    deslogaCliente: () => set({cliente: {} as UsuarioItf})
 }))
 
 // export function useHydrateCliente() {

@@ -1,4 +1,4 @@
-import { PrismaClient, Status, Tipo_entrega } from "@prisma/client"
+import { PrismaClient, Status } from "@prisma/client"
 import { Router } from "express"
 import { z } from "zod"
 import nodemailer from "nodemailer"
@@ -8,18 +8,16 @@ const router = Router()
 
 // Validação de criação de pedido
 const pedidoSchema = z.object({
-  consumidor_id: z.number(),
-  mercadoria_id: z.number(),
   status: z.nativeEnum(Status),
-  tipo_entrega: z.nativeEnum(Tipo_entrega),
-  motoboy_id: z.number().optional(),
+  mercadoria_id: z.number(),
+  usuario_id: z.string(),
 })
 
 // GET /pedido/ — listar todos os pedidos
 router.get("/", async (req, res) => {
   try {
     const pedidos = await prisma.pedido.findMany({
-      include: { consumidor: true, mercadoria: true },
+      include: { usuario: true, mercadoria: true },
       orderBy: { id: 'desc' }
     })
     res.status(200).json(pedidos)
@@ -93,8 +91,7 @@ router.patch("/:id", async (req, res) => {
     const pedido = await prisma.pedido.update({
       where: { id: Number(id) },
       data: {
-        status,
-        motoboy_id: motoboy_id ?? undefined
+        status
       }
     })
 
@@ -102,15 +99,15 @@ router.patch("/:id", async (req, res) => {
     const dados = await prisma.pedido.findUnique({
       where: { id: Number(id) },
       include: {
-        consumidor: true,
+        usuario: true,
         mercadoria: true
       }
     })
 
     if (dados) {
       await enviaEmailPedido(
-        dados.consumidor.nome as string,
-        dados.consumidor.email as string,
+        dados.usuario.nome as string,
+        dados.usuario.email as string,
         dados.mercadoria.nome as string,
         status
       )
@@ -122,12 +119,12 @@ router.patch("/:id", async (req, res) => {
   }
 })
 
-// GET /pedido/:consumidorId — pedidos de um consumidor
-router.get("/:consumidorId", async (req, res) => {
-  const { consumidorId } = req.params
+// GET /pedido/:usuarioId — pedidos de um usuario
+router.get("/:usuario_id", async (req, res) => {
+  const { usuario_id } = req.params
   try {
     const pedidos = await prisma.pedido.findMany({
-      where: { consumidor_id: Number(consumidorId) },
+      where: { usuario_id: String(usuario_id) },
       include: { mercadoria: true }
     })
     res.status(200).json(pedidos)

@@ -15,7 +15,8 @@ export default function Home() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/mercadorias`)
       const dados = await response.json()
       console.log(dados)
-      setMercadoria(dados)
+      // setMercadoria(dados)
+      setMercadoria(Array.isArray(dados) ? dados : dados.mercadorias);
     }
     buscaDados()
   }, [])

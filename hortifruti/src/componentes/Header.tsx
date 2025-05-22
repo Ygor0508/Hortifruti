@@ -59,7 +59,7 @@ export function Header() {
                                 <>
                                     <span className="text-black dark:text-white">{cliente.nome}</span>
                                     <Link
-                                        href="/carrinho"
+                                        href="/pedido"
                                         className="text-white font-bold bg-gray-600 hover:bg-gray-700 focus:ring-2 focus:outline-none focus:ring-gray-400 rounded-lg text-sm px-3 py-2 text-center dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
                                     >
                                         Meu Carrinho

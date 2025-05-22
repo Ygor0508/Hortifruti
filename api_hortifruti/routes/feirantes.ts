@@ -49,12 +49,7 @@ const feiranteSchema = z.object({
       .regex(/^\d{10,11}$/, {
         message: "Telefone deve conter apenas números e ter entre 10 e 11 dígitos"
       }),
-  
-    localizacao: z.object({
-        latitude: z.number({ invalid_type_error: "Latitude deve ser um número" }),
-        longitude: z.number({ invalid_type_error: "Longitude deve ser um número" })
-      }),
-    usuario_id: z.number(),
+    // usuario_id: z.string(),
   })
 
 router.get("/", async (req, res) => {
@@ -76,7 +71,7 @@ router.post("/", async (req, res) => {
     return
   }
 
-  const { nome, email, senha, telefone, localizacao, usuario_id } = valida.data
+  const { nome, email, senha, telefone } = valida.data
 
   try {
     const feirante = await prisma.feirante.create({
@@ -84,15 +79,7 @@ router.post("/", async (req, res) => {
         nome,
         email,
         senha,
-        telefone,
-        usuario_id,
-        
-        localizacao: {
-          create: [{
-            latitude: localizacao.latitude,
-            longitude: localizacao.longitude,
-          }]
-        }
+        telefone
       }
     })
     res.status(201).json(feirante)
@@ -144,19 +131,15 @@ router.put("/:id", async (req, res) => {
   if (!valida.success) {
     return res.status(400).json({ erro: valida.error })
   }
-  const { nome, email, senha, telefone, localizacao } = valida.data
+  const { nome, email, senha, telefone } = valida.data
 
   try {
     // Busca feirante + localização atual para obter o ID
     const feiranteAtual = await prisma.feirante.findUnique({
       where: { id: Number(id) },
-      include: { localizacao: true }
     })
     if (!feiranteAtual) {
       return res.status(404).json({ erro: "Feirante não encontrado" })
-    }
-    if (feiranteAtual.localizacao.length === 0) {
-      return res.status(400).json({ erro: "Nenhuma localização cadastrada" })
     }
 
     // Nested update: data fica DENTRO de update
@@ -166,18 +149,8 @@ router.put("/:id", async (req, res) => {
         nome,
         email,
         senha,
-        telefone,
-        localizacao: {
-          update: {
-            where: { id: feiranteAtual.localizacao[0].id },
-            data: {
-              latitude: localizacao.latitude,
-              longitude: localizacao.longitude,
-            },
-          },
-        },
-      },
-      include: { localizacao: true },
+        telefone
+      }
     })
 
       return res.status(200).json(updatedFeirante)
